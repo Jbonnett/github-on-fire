@@ -4,18 +4,19 @@ import base64
 import pprint
 import datetime
 
-barf = pprint.PrettyPrinter(indent=4)
-
+#move to a model
 username = 'jbonnett'
 password = ''
 mileston = 2
 repo_user = 'BayCitizen'
 repo_name = 'yeti'
+iteration_length = datetime.timedelta(weeks=1).total_seconds()
 
+#move to a model
 label_point_map = {
-        '1hr':1,
-        '1d':5,
-        '1w':25,
+        '1hr': 1,
+        '1d': 5,
+        '1w': 25,
     }
 
 #assumed burn rate
@@ -42,18 +43,18 @@ def generate_burngraph():
             start_date = datetime.datetime.strptime(issues[0]['created_at'], "%Y-%m-%dT%H:%M:%SZ")
         for issue in issues:
             created_at = datetime.datetime.strptime(issue['created_at'], "%Y-%m-%dT%H:%M:%SZ")
-            start_itter = int((created_at-start_date).total_seconds() /
+            start_itter = int((created_at - start_date).total_seconds() /
                 iteration_length)
             end_itter = None
             if (issue["closed_at"]):
-                closed_at = datetime.datetime.strptime(issue['closed_at'], "%Y-%m-%dT%H:%M:%SZ" )
+                closed_at = datetime.datetime.strptime(issue['closed_at'], "%Y-%m-%dT%H:%M:%SZ")
                 time_since_closed = closed_at - start_date
                 end_itter = int(time_since_closed.total_seconds() / iteration_length)
-            
+
             if not end_itter:
                 #20 years aught to be enough
                 end_itter = 52
-            label_name=None
+            label_name = None
             for label in issue["labels"]:
                 if label['name'] in label_point_map.keys():
                     #incrament from creation date to closed date
@@ -124,7 +125,6 @@ print """
                 paper = cir.chartz.lineChart("#numLineChart", linedata, {'axis': true});
                 attachEvents(paper.dots);
             });
-        
         </script>
     </head>
     <body>
@@ -133,7 +133,7 @@ print """
     <ul>
 """ % json.dumps(objects)
 for week, points in iters.items():
-        current = start_date + datetime.timedelta(seconds= week * iteration_length)
+        current = start_date + datetime.timedelta(seconds=week * iteration_length)
         print "    <li>iteration: %s (week of %s), hours of backlog: %s </li>" % (week, current.date(), points)
 print """
     </ul>
