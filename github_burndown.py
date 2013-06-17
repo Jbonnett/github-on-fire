@@ -8,8 +8,8 @@ import datetime
 username = 'jbonnett'
 password = ''
 mileston = 2
-repo_user = 'BayCitizen'
-repo_name = 'yeti'
+repo_user = 'Jbonnett'
+repo_name = 'github-on-fire'
 iteration_length = datetime.timedelta(weeks=1).total_seconds()
 
 #move to a model
